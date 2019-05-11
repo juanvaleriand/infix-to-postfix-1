@@ -46,15 +46,15 @@ def cetak_postfix(postfix):
     text = "Stack: "
     print(' '*len(text), end="")
     for i in postfix:
-        print(i, end = " ")
+        print(i, end=' ')
     print()
     print()
     final_postfix(postfix)
-    
+     
 def final_postfix(postfx):
     print("Postfix: ", end = "")
     for i in postfx:
-        if i == ' ':
+        if i == '' or i == ' ':
             continue
         print(i, end = " ")
     print()
@@ -93,7 +93,7 @@ def infix_to_postfix(infix_expr):
             while not stack == [] and operator(stack[0]) >= operator(infix):
                 postfix.append(stack.pop(0))
             stack.insert(0, infix)
-            postfix.append(' ')
+            postfix.append('')
         elif infix == ')':
             top_stack = stack.pop(0)
             while top_stack != '(':
