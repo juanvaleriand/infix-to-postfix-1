@@ -1,0 +1,392 @@
+<!-- 
+    CREATED BY JUAN VALERIAN DELIMA 
+    http://github.com/juandelima
+-->
+<html>
+    <head>
+        <title>Infix to Postfix</title> 
+        <meta charset="utf-8" name="viewport" content= "width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            @media (min-width: 1281px) {
+                #margin {
+                    margin: 0 auto; 
+                }
+
+                .margin {
+                    margin-top: 20px !important;
+                }
+
+                .table {
+                    width: 1169px;
+                }
+
+                .button {
+                    width: 100%;
+                }
+
+                td {
+                    text-align: center !important;
+                }
+            }
+
+            @media (min-width: 1025px) and (max-width: 1280px) {
+                #margin {
+                    margin: 0 auto; 
+                }
+
+                .margin {
+                    margin-top: 20px !important;
+                }
+
+                .table {
+                    width: 100%;
+                }
+
+                .button {
+                    width: 100%;
+                }
+
+                td {
+                    text-align: center !important;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) {
+                #margin {
+                    margin: 0 auto; 
+                }
+                .title {
+                    font-size: 16px !important;
+                }
+                .margin {
+                    margin-top: 20px !important;
+                    margin-left: 25px !important;
+                    margin-right: 25px !important;
+                }
+
+                .table {
+                    width: 100%;
+                }
+
+                .button {
+                    width: 100%;
+                }
+
+                td {
+                    text-align: center !important;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+                #margin {
+                    margin: 0 auto; 
+                }
+                .title {
+                    font-size: 16px !important;
+                }
+                .margin {
+                    margin-top: 20px !important;
+                    margin-left: 25px !important;
+                    margin-right: 25px !important;
+                }
+
+                .table {
+                    width: 100%;
+                }
+
+                .button {
+                    width: 100%;
+                }
+
+                td {
+                    text-align: center !important;
+                }
+            }
+
+            @media (min-width: 481px) and (max-width: 767px) {
+                #margin {
+                    margin: 0 auto; 
+                }
+                .title {
+                    font-size: 16px !important;
+                }
+                .margin {
+                    margin-top: 20px !important;
+                    margin-left: 25px !important;
+                    margin-right: 25px !important;
+                }
+
+                .table {
+                    width: 100%;
+                }
+
+                .button {
+                    width: 100%;
+                }
+
+                td {
+                    text-align: center !important;
+                }
+            }
+
+            @media (min-width: 300px) and (max-width: 480px) {
+                #margin {
+                    margin: 0 auto; 
+                }
+                .title {
+                    font-size: 16px !important;
+                }
+                .margin {
+                    margin-top: 20px !important;
+                    margin-left: 25px !important;
+                    margin-right: 25px !important;
+                }
+
+                table.table {
+                    width: 100%;
+                }
+
+                .button {
+                    width: 100%;
+                }
+
+                td {
+                    text-align: center !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container margin" id="margin">
+            <h1 style="text-align:center; margin-bottom: 15px; font-size: 20px;" class="title">INFIX TO POSTFIX</h1>
+            <table class="table is-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-info" type="text" placeholder="Infix" id="infix" required>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <a class="button is-primary is-outlined" id="to-postfix" onclick="get_string()">Convert</a>
+                            <a class="button is-danger is-outlined" id="reset" style="display: none;" onclick="reset()">Reset</a>
+                        </th>
+                   </tr>
+                </thead>
+                
+            </table>
+
+            <table class="table is-bordered">
+                <tbody id="stack">
+                    <p id="text_stack" style="font-size: 15px; display: none">Stack:</p>          
+                </tbody>
+            </table>
+            <table class="table is-bordered">
+                <tbody id="postfix">
+                    <p id="text_postfix" style="font-size: 15px; display: none">Postfix:</p>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            var temp_stack = [];
+           function operator(op) {
+                if (op == '^') {
+                    return 3
+                } else if (op == '*' || op == '/') {
+                    return 2
+                } else if (op == '+' || op == '-') {
+                    return 1
+                } else {
+                    return 0
+                }
+           }
+           function reset() {
+               temp_stack = [];
+               var new_str = null;
+               var table = document.getElementById("postfix");
+               var table_stack = document.getElementById("stack");
+               table_stack.innerHTML = "";
+               table.innerHTML = "";
+               document.getElementById('infix').value = ""
+               document.getElementById("to-postfix").style.display = 'block';
+               document.getElementById("reset").style.display = 'none';
+               document.getElementById("text_stack").style.display = 'none';
+               document.getElementById("text_postfix").style.display = 'none';
+           }
+           function get_string() {
+              new_str = document.getElementById('infix').value;
+               test(new_str);
+               document.getElementById("to-postfix").style.display = 'none';
+               document.getElementById("reset").style.display = 'block';
+               document.getElementById("text_stack").style.display = 'block';
+               document.getElementById("text_postfix").style.display = 'block';
+           }
+           function save_stack(stack) {
+               for(var i = 0; i < stack.length; i++) {
+                   temp_stack.push(stack[i]);
+               }
+           }
+           function test(new_str) {
+               var postfix = [];
+               var stack = [];
+               var len_stack = [];
+               if (new_str == null) {
+                   return;
+               } else {
+                   for(var i = 0; i < new_str.length; i++) {
+                       if (new_str[i] == ' ') {
+                           continue;
+                        } else if (new_str[i] == '(') {
+                               stack.unshift(new_str[i]);
+                               postfix.push('');
+                        } else if (new_str[i] == '^' || new_str[i] == '*' || new_str[i] == '/' || new_str[i] == '+' || new_str[i] == '-') {
+                            while (stack.length != 0 && (operator(stack[0]) >= operator(new_str[i]))) {
+                                postfix.push(stack.shift());
+                            }
+                            stack.unshift(new_str[i]);
+                            postfix.push('');
+                        } else if (new_str[i] == ')') {
+                            var top_stack = stack.shift();
+                            while (top_stack != '(') {
+                                postfix.push(top_stack);
+                                top_stack = stack.shift();
+                            }
+                        } else {
+                            postfix.push(new_str[i])
+                        }
+                        
+                        save_stack(stack);
+                        len_stack.push(stack.length);
+                    }
+               }
+
+                while(stack.length != 0) {
+                    postfix.push(stack.shift());
+                }
+                proses_cetak_stack(temp_stack, len_stack, postfix);
+                
+           }
+           
+           
+           
+           function len_terbesar(junk_stack) {
+                var terbesar = junk_stack[0].length;
+                for (var i = 0; i < junk_stack.length; i++) {
+                    if (junk_stack[i].length > terbesar) {
+                        terbesar = junk_stack[i].length;
+                    }
+                }
+                return terbesar;
+           }
+           function cetak_space(terbesar, junk_stack, array_less, space_array) {
+               for (var i = 0; i < junk_stack.length; i++) {
+                   var loop = terbesar - junk_stack[i].length;
+                   for (var j = 0; j < loop; j++) {
+                        junk_stack[i].unshift('');
+                   }
+               }
+
+               for (var i = 0; i < array_less; i++) {
+                   junk_stack.push(space_array[i]);
+               }
+
+               return junk_stack;
+           }
+           function tranpose_stack(space) {
+               var transpose = [];
+               for(var i = 0; i < space[0].length; i++) {
+                   var temp_trsp = [];
+                   for(var j = 0; j < space.length; j++) {
+                       temp_trsp.push(space[j][i]);
+                   }
+                   transpose.push(temp_trsp);
+               }
+               return transpose;
+           }
+
+           function cetak_stack(transpose_stck,postfix) {
+               var table = document.getElementById("stack");
+               for(var i = 0; i < transpose_stck.length; i++) {
+                   var rows = table.insertRow(table.length);
+                   for(var j = 0; j < transpose_stck[0].length; j++) {
+                        var cell = rows.insertCell(j);
+                        cell.innerHTML = transpose_stck[i][j]; 
+                   }
+               }
+           }
+
+           function cetak_postfix(postfix) {
+               var table = document.getElementById("stack");
+               var rows = table.insertRow(table.length);
+               for(var i = 0; i < postfix.length; i++) {
+                   var cell = rows.insertCell(i);
+                   cell.innerHTML = postfix[i];
+               }
+
+               final_postfix(postfix);
+           }
+
+
+           function final_postfix(postfix) {
+               var last_postfix = [];
+               var table = document.getElementById("postfix");
+               var rows = table.insertRow(table.length);
+               for(var i = 0; i < postfix.length; i++) {
+                   if(postfix[i] == '') {
+                       continue;
+                   }
+                   last_postfix.push(postfix[i])
+               }
+
+               for(var i = 0; i < last_postfix.length; i++) {
+                    var cell = rows.insertCell(i);
+                    cell.innerHTML = last_postfix[i];
+               }
+           }
+
+
+           function tmp_space(array_less, max_len) {
+               var arr_space = [];
+               for(var i = 0; i < array_less; i++) {
+                   var arr = [];
+                   var loop = max_len - 0;
+                   for(var j = 0; j < loop; j++) {
+                        arr.push('');
+                   }
+                   arr_space.push(arr);
+               }
+
+               return arr_space;
+           }
+           function proses_cetak_stack(stack, len_stack, postfix) {
+               var junk_stack = [];
+               var i = 0;
+               for(var j = 0; j < len_stack.length; j++) {
+                   var temp_stack = [];
+                   for(var x = 0; x < len_stack[j]; x++) {
+                       temp_stack.push(stack[i]);
+                       i += 1;
+                   }
+                   junk_stack.push(temp_stack);
+               }
+               var array_less = postfix.length - junk_stack.length;
+               var max_len  = len_terbesar(junk_stack);
+               var space_tmp = tmp_space(array_less, max_len);
+               var space = cetak_space(max_len, junk_stack, array_less, space_tmp);
+               var transpose_stck = tranpose_stack(space);
+               cetak_stack(transpose_stck, postfix);
+               cetak_postfix(postfix);
+               console.log(max_len);
+               console.log(space);
+               console.log(transpose_stck);
+               console.log(array_less);
+               console.log(space_tmp);
+           }
+        </script>
+    </body>
+</html>

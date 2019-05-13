@@ -43,7 +43,7 @@ def cetak_stack(transpose_stack):
         print()
 
 def cetak_postfix(postfix):
-    text = "Stack: "
+    text = "Stack:  "
     print(' '*len(text), end="")
     for i in postfix:
         print(i, end=' ')
@@ -75,7 +75,7 @@ def proses_stack(arr_stack, len_stack, postfix):
     cetak_stack(transpose_stack)
     cetak_postfix(postfix)
      
-  
+
 def infix_to_postfix(infix_expr):
     infix_ex = list(infix_expr)
     postfix = []
